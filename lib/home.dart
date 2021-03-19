@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_layout_app/detail.dart';
+import 'package:flutter_layout_app/home_provider.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -33,8 +35,9 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
         child: InkWell(
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Detail()));
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => Detail()));
+            Get.toNamed('/detail');
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -67,8 +70,13 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Text(
-                  'Siap-Siap, BTS Dikabarkan Akan Rilis Album BE Versi Terbaru',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  Provider.of<HomeProvider>(context).listData[0]['title'],
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: context.watch<HomeProvider>().isShow
+                          ? Colors.blue
+                          : Colors.black),
                 ),
               )
             ],
