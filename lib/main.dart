@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_app/home.dart';
-import 'package:flutter_layout_app/home_provider.dart';
+import 'package:flutter_layout_app/home_controller.dart';
 import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
-
 import 'detail.dart';
+import 'package:get/get.dart';
 
 void main() {
+  Get.put(HomeController());
   runApp(MyApp());
 }
 
@@ -15,20 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => HomeProvider(),
-        )
+    return GetMaterialApp(
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => Home()),
+        GetPage(name: '/detail', page: () => Detail())
       ],
-      child: GetMaterialApp(
-        initialRoute: '/',
-        getPages: [
-          GetPage(name: '/', page: () => Home()),
-          GetPage(name: '/detail', page: () => Detail())
-        ],
-        home: Home(),
-      ),
+      home: Home(),
     );
   }
 }

@@ -1,16 +1,13 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_layout_app/home_provider.dart';
+import 'package:flutter_layout_app/home_controller.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+// ignore: must_be_immutable
+class Home extends StatelessWidget {
+  var textTitle = 'Headline'.obs;
+  HomeController controller = Get.find<HomeController>();
 
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,57 +28,102 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-        child: InkWell(
-          onTap: () {
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (context) => Detail()));
-            Get.toNamed('/detail');
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Headline',
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Obx(
+                () => Text(
+                  textTitle.value,
+                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            height: 3,
+            color: Colors.red[600],
+          ),
+          Container(
+            height: 400,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+              child: CarouselSlider.builder(
+                itemCount: controller.listData.length,
+                itemBuilder: (BuildContext context, int index, int realIndex) {
+                  return InkWell(
+                    onTap: () => controller.onTapItem(
+                        controller.listData[index]['gambar'],
+                        controller.listData[index]['title']),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+                          child:
+                              Image.asset(controller.listData[index]['gambar']),
+                        ),
+                        Text(
+                          controller.listData[index]['channel'],
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.red[600]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Text(
+                            controller.listData[index]['title'],
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: controller.isRead
+                                    ? Colors.black
+                                    : Colors.blue),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                options: CarouselOptions(
+                    autoPlay: true,
+                    autoPlayAnimationDuration: Duration(seconds: 1),
+                    autoPlayInterval: Duration(seconds: 3),
+                    initialPage: controller.page,
+                    enlargeCenterPage: true,
+                    disableCenter: true,
+                    height: 100,
+                    onPageChanged: (index, _) {
+                      controller.setPage(index);
+                    }),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                controller.listData.length,
+                (index) => Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red[600]),
+                    shape: BoxShape.rectangle,
+                    color: controller.page == index
+                        ? Colors.red[600]
+                        : Colors.white,
                   ),
                 ),
               ),
-              Divider(
-                height: 3,
-                color: Colors.red[600],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
-                child: Image.asset('assets/images/foto_bts.png'),
-              ),
-              Text(
-                'Entertaiment',
-                textAlign: TextAlign.start,
-                style: TextStyle(color: Colors.red[600]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  Provider.of<HomeProvider>(context).listData[0]['title'],
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: context.watch<HomeProvider>().isShow
-                          ? Colors.blue
-                          : Colors.black),
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

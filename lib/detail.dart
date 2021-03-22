@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_layout_app/detail_provider.dart';
-import 'package:flutter_layout_app/home_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_layout_app/detail_controller.dart';
+import 'package:flutter_layout_app/home_controller.dart';
+import 'package:get/get.dart';
 
-class Detail extends StatefulWidget {
-  Detail({Key key}) : super(key: key);
+class Detail extends StatelessWidget {
+  HomeController controller = Get.find<HomeController>();
 
-  @override
-  _DetailState createState() => _DetailState();
-}
-
-class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DetailProvider(),
-      builder: (context, _) {
+    return GetBuilder<DetailController>(
+      init: DetailController(),
+      builder: (detail) {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -51,7 +46,7 @@ class _DetailState extends State<Detail> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: Text(
-                  Provider.of<HomeProvider>(context).listData[0]['title'],
+                  controller.pickTitle,
                   style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -67,7 +62,7 @@ class _DetailState extends State<Detail> {
                 child: Text('Rabu, 4 November 2020'),
               ),
               Image.asset(
-                Provider.of<DetailProvider>(context).image,
+                controller.pickImage,
                 fit: BoxFit.fill,
               ),
               Padding(
@@ -77,7 +72,7 @@ class _DetailState extends State<Detail> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                  'Seoul – Boyband kpop BTS akan merilis versi baru dari album BE , yakni BE (Essential Edition). Pada 20 November 2020, BTS merilis BE (Deluxe Edition), sebuah album yang lahir dari pandemi Covid-19. Album ini menampilkan delapan lagu yang menghibur, termasuk Life Goes On, Fly to My Room, dan Dynamite. \n\nBaca juga: Wah! Ternyata Ini Kebiasaan Tidur Aneh Anggota BTS',
+                  detail.deskripsi,
                   softWrap: true,
                   textAlign: TextAlign.justify,
                   style: TextStyle(fontSize: 18.0),
@@ -88,8 +83,8 @@ class _DetailState extends State<Detail> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    context.read<HomeProvider>().setShow(true);
-                    Navigator.pop(context);
+                    controller.setShow(true);
+                    detail.onBack();
                   },
                   child: Text('Back'))
             ],
