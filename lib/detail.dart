@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_layout_app/detail_controller.dart';
-import 'package:flutter_layout_app/home_controller.dart';
+import 'package:flutter_layout_app/controller/detail_controller.dart';
+import 'package:flutter_layout_app/controller/home_controller.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Detail extends StatelessWidget {
   HomeController controller = Get.find<HomeController>();
 
@@ -61,10 +62,15 @@ class Detail extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
                 child: Text('Rabu, 4 November 2020'),
               ),
-              Image.asset(
-                controller.pickImage,
-                fit: BoxFit.fill,
-              ),
+              controller.pickImage.toString().contains('asset/images')
+                  ? Image.asset(
+                      controller.pickImage,
+                      fit: BoxFit.fill,
+                    )
+                  : Image.network(
+                      controller.pickImage,
+                      fit: BoxFit.fill,
+                    ),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 40),
                 child: Text('Foto: The Korea Herald'),
