@@ -66,9 +66,8 @@ class Home extends StatelessWidget {
                           itemBuilder:
                               (BuildContext context, int index, int realIndex) {
                             return InkWell(
-                              onTap: () => controller.onTapItem(
-                                  controller.listData[index]?.thumbLarge,
-                                  controller.listData[index]?.title),
+                              onTap: () => controller
+                                  .onTapItem(controller.listData[index]),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.start,

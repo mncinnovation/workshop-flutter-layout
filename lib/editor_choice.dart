@@ -47,12 +47,17 @@ class EditorChoice extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: 400,
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.item.length,
-                  itemBuilder: (context, index) {
-                    return itemContent(controller, index);
-                  },
+                child: GetBuilder<EditorController>(
+                  init: EditorController(),
+                  initState: (value) =>
+                      Get.find<EditorController>().fetchCeleb(),
+                  builder: (controller) => ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.item?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return itemContent(controller, index);
+                    },
+                  ),
                 ),
               ),
             ],
@@ -65,31 +70,32 @@ class EditorChoice extends StatelessWidget {
   Widget itemContent(EditorController controller, int index) {
     return GestureDetector(
       onTap: () => controller.onTapItem(
-          controller.item[index]['image'], controller.item[index]['title']),
+        controller.item[index],
+      ),
       child: Container(
         width: MediaQuery.of(Get.context).size.width * 0.7,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              controller.item[index]['image'],
+            Image.network(
+              controller.item[index].thumbLarge,
               scale: 20 / 9,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Text(
-                controller.item[index]['type'],
+                controller.item[index].tipe,
                 style: TextStyle(color: Colors.red[600], fontSize: 15.0),
               ),
             ),
             Text(
-              controller.item[index]['title'],
+              controller.item[index].title,
               style: TextStyle(color: controller.colorText, fontSize: 20.0),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Text(
-                controller.item[index]['time'],
+                controller.item[index].datePublish,
                 style: TextStyle(
                     color: controller.colorText, fontWeight: FontWeight.w200),
               ),

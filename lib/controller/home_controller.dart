@@ -40,6 +40,8 @@ class HomeController extends GetxController with AppService {
 
   var isRead = true;
 
+  Datum artikel = Datum();
+
   setShow(value) {
     isShow = value;
 
@@ -56,20 +58,14 @@ class HomeController extends GetxController with AppService {
     update();
   }
 
-  onTapItem(String images, String title) {
-    pickTitle = title;
-    pickImage = images;
+  onTapItem(value) {
+    artikel = value;
     update();
     Get.toNamed('/detail');
   }
 
-  setImage(value) {
-    pickImage = value;
-    update();
-  }
-
-  setTitle(value) {
-    pickTitle = value;
+  setArtikel(value) {
+    artikel = value;
     update();
   }
 
@@ -85,7 +81,7 @@ class HomeController extends GetxController with AppService {
       listData = result.data;
       update();
     } catch (err) {
-      debugPrint(err);
+      debugPrint(err.toString());
     }
   }
 }
